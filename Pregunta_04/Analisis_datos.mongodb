@@ -1,0 +1,76 @@
+use("bd_prueba")
+
+db.boleta.insertOne(
+    {_id: 'B346-000003794',
+    numero: "LI3IB02",
+    clasificacion: "Electrónica",
+    proveedor: {
+        razon_social:"Viettel Peru SAC",
+        direccion: "Cal.21 NRO 878 - San Isidro",
+        provincia: "Lima",
+        departamento: "Lima",
+        urbanizacion: "Corpac",
+        ruc: 20543254798,
+        web: "www.bitel.com.pe"
+    },
+    establecimiento: {
+        nombre: "Open Plaza Atocongo",
+        distrito: "San Juan de Miraflores",
+        provincia: "Lima",
+        departamento: "Lima",
+        referencia: "M-35",
+        direccion: "Av. Circunvalación Nro 1801",
+    },
+    cliente: {
+        id: "80466200",
+        nombre : "Juan",
+        apellidos: "Zavala Ramos"
+    },
+    vendedor: "SOLMA3_LI3",
+    fecha: ISODate("2023-11-05"),
+    hora: "20:42:46",
+    productos: [{
+        "_id" : "1-057399C",
+        "nombre": "Celular Honor X6 4 + 64GB",
+        "color" : "Silver_A",
+        "precio_unitario": 233.70
+    }],
+    costo_total: 233.70,
+    igv: 35.65
+    }
+)
+
+db.boleta.find(
+    //Filtrado
+    {
+        //Proveedor ubicado en San Isidro
+        "proveedor.direccion" : { $regex: "San Isidro"},
+
+        //Establecimiento dónde se realizó la venta ubicado en San Juan de Miraflores
+        "establecimiento.distrito": "San Juan de Miraflores",
+
+        //Fecha de realización de la venta después de enero del 2023
+        fecha: {$gte: ISODate("2023-01-01")},
+
+        //Costo total mayor a S/. 200 y menor o igual a S/. 300
+        costo_total: { $gt: 200, $lte: 300}    
+    },
+    //Proyección
+    {
+        _id : 1, //B346-000003794
+        clasificacion: 1, //Electrónica
+        "proveedor.ruc": 1, //20543254798
+        "proveedor.razon_social" : 1, //Viettel Peru SAC
+        "proveedor.web": 1, //www.bitel.com.pe
+        "establecimiento.nombre": 1, //Open Plaza Atocongo
+        "establecimiento.direccion" : 1, //Av. Circunvalación Nro 1801
+        "cliente.nombre": 1, //Juan
+        "producto.nombre" : 1, //Celular Honor X6 4 + 64GB
+        "producto.color": 1, // Silver_A
+        costo_total: 1, // 233.70
+        igv: 1 //35.65
+    }
+//Ordenamiento
+).sort(
+     {fecha: -1}
+)

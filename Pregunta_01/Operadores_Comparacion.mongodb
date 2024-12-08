@@ -1,0 +1,42 @@
+use("baticell_store")
+
+/*1. Muestre los clientes que no residan en Breña ni en La Molina. Ordene en descendente por apellidos.
+Sólo debe mostrar los campos: nombres, apellidos, email y puntos.*/
+db.clients.find(
+    {
+        direccion: {
+                        $not: { $regex: "Breña|La Molina"}
+                   }
+    },
+    {
+        "_id": 0,
+        nombre: 1,
+        apellidos: 1,
+        email: 1,
+        puntos: 1,
+        direccion: 1,
+    }
+).sort(
+    {apellidos: -1}
+)
+
+/*2. Muestre los clientes cuyos puntos estén comprendidos entre 200 y 300.
+Considere visualizar sólo los campos: fecha de registro, nombres, apellidos, modelo favorito, puntos y suscripciones.
+Ordene por fecha de registro.*/
+db.clients.find(
+    {
+        puntos: { $gte: 200, $lte: 300}
+    },
+    {
+        _id: 0,
+        nombre: 1,
+        apellidos: 1,
+        fechaRegistro: 1,
+        modeloFavorito: 1,
+        puntos: 1,
+        suscripciones: 1
+    }
+).sort(
+    {fechaRegistro: 1}
+)
+

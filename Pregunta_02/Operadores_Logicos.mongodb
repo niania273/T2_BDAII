@@ -1,0 +1,38 @@
+use("baticell_store")
+
+/*1. Listar productos _id, nombre, descripción, marca y especificaciones,
+filtre cuya cantidad de ram sea “8GB”, precio unitario mayor a 800 y cantidad mayor igual a 30,
+ordene en descendente por marca. */
+db.products.find(
+    {
+         "especificaciones.ram": "8 GB",
+         cantidad: { $gte: 30},
+         precio_unitario: { $gt: 800},
+    },
+    {
+        nombre: 1,
+        descripcion: 1,
+        marca: 1,
+        especificaciones: 1
+    }
+).sort(
+    { "marca": -1}
+)
+
+/* 2. Mostrar los productos cuyo precio unitario sea menor igual a 900 o color sea “negro”,
+descartar la marca OnePlus. */
+db.products.find(
+    {
+        $and: [
+            {$or: [
+                { precio_unitario: { $lte: 900 } },
+             
+                { coloresDisponibles: "Negro" }
+            ]},
+            {
+                marca: {$not: { $regex: "OnePlus"}}
+            }
+
+        ]
+    }
+)

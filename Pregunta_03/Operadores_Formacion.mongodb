@@ -1,0 +1,48 @@
+use("baticell_store")
+
+/* 1. Utilizando la colección vendedores mostrar nombres, apellidos y sucursal,
+filtre por sucursal que sea “Sucursal Oeste”. Ordene por cualquier campo. */
+db.sellers.find(
+    {
+        sucursal: "Sucursal Oeste"
+    },
+    {
+        _id: 0,
+        nombre: 1,
+        apellidos: 1,
+        sucursal: 1
+    }
+).sort(
+    {
+        fechaIngreso: -1
+    }
+)
+
+/* 2. Listar sólo los nombres, apellidos y metas de los vendedores (sin “_id”), ordenada por fecha de ingreso en descendente,
+recuperar los 3 primeros documentos. Filtre sólo ventas mensuales mayores de 50000. */
+db.sellers.find(
+    {
+        "metas.ventasMensuales": { $gt: 50000}
+    },
+    {
+        _id: 0,
+        nombre: 1,
+        apellidos: 1,
+        metas: 1
+    }
+).sort(
+    { fechaIngreso: -1}
+).limit(3)
+
+/* 3. Mostrar todos aquellos vendedores cuya Venta mensual sea mayor e igual a 50000 y
+que dentro de su atributo productos preferidos sean “iPhone 13” o “Xiaomi Mi 11”. Ordene en descendente por apellidos. */
+db.sellers.find(
+    { $and: 
+        [
+            { "metas.ventasMensuales": { $gte: 50000}},
+            { productosPreferidos: { $in: ["iPhone 13", "Xiaomi Mi 11"]}}
+        ]
+    }
+).sort(
+    { apellidos: -1 }
+)
